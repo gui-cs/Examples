@@ -4,11 +4,11 @@ using System.Reactive.Disposables.Fluent;
 using System.Reactive.Linq;
 using ReactiveMarbles.ObservableEvents;
 using ReactiveUI;
-using Terminal.Gui.Configuration;
-using Terminal.Gui.Views;
 using Terminal.Gui.App;
-using Terminal.Gui.ViewBase;
+using Terminal.Gui.Configuration;
 using Terminal.Gui.Input;
+using Terminal.Gui.ViewBase;
+using Terminal.Gui.Views;
 
 namespace ReactiveExample;
 
@@ -25,38 +25,38 @@ public class LoginView : Window, IViewFor<LoginViewModel>
     {
         Title = $"Reactive Extensions Example - {Application.GetDefaultKey (Command.Quit)} to Exit";
         ViewModel = viewModel;
-        var title = this.AddControl<Label> (x => x.Text = "Login Form");
-        var unLengthLabel = title.AddControlAfter<Label> ((previous, unLength) =>
-            {
-                unLength.X = Pos.Left (previous);
-                unLength.Y = Pos.Top (previous) + 1;
+        (Window MainView, Label LastControl) title = this.AddControl<Label> (x => x.Text = "Login Form");
+        (Window MainView, Label LastControl) unLengthLabel = title.AddControlAfter<Label> ((previous, unLength) =>
+        {
+            unLength.X = Pos.Left (previous);
+            unLength.Y = Pos.Top (previous) + 1;
 
-                ViewModel
-                    .WhenAnyValue (x => x.UsernameLength)
-                    .Select (length => $"_Username ({length} characters):")
-                    .BindTo (unLength, x => x.Text)
-                    .DisposeWith (_disposable);
-            });
+            ViewModel
+                .WhenAnyValue (x => x.UsernameLength)
+                .Select (length => $"_Username ({length} characters):")
+                .BindTo (unLength, x => x.Text)
+                .DisposeWith (_disposable);
+        });
         unLengthLabel.AddControlAfter<TextField> ((previous, unInput) =>
-            {
-                unInput.X = Pos.Right (previous) + 1;
-                unInput.Y = Pos.Top (previous);
-                unInput.Width = 40;
-                unInput.Text = ViewModel.Username;
+        {
+            unInput.X = Pos.Right (previous) + 1;
+            unInput.Y = Pos.Top (previous);
+            unInput.Width = 40;
+            unInput.Text = ViewModel.Username;
 
-                ViewModel
-                    .WhenAnyValue (x => x.Username)
-                    .BindTo (unInput, x => x.Text)
-                    .DisposeWith (_disposable);
+            ViewModel
+                .WhenAnyValue (x => x.Username)
+                .BindTo (unInput, x => x.Text)
+                .DisposeWith (_disposable);
 
-                unInput
-                    .Events ()
-                    .TextChanged
-                    .Select (_ => unInput.Text)
-                    .DistinctUntilChanged ()
-                    .BindTo (ViewModel, x => x.Username)
-                    .DisposeWith (_disposable);
-            });
+            unInput
+                .Events ()
+                .TextChanged
+                .Select (_ => unInput.Text)
+                .DistinctUntilChanged ()
+                .BindTo (ViewModel, x => x.Username)
+                .DisposeWith (_disposable);
+        });
         unLengthLabel.AddControlAfter<Label> ((previous, pwLength) =>
             {
                 pwLength.X = Pos.Left (previous);

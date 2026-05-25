@@ -6,7 +6,7 @@ using Terminal.Gui.Resources;
 using Terminal.Gui.ViewBase;
 using Terminal.Gui.Views;
 
-bool smokeTest = args.Length > 0 && args[0] == "--smoke-test";
+var smokeTest = args.Length > 0 && args [0] == "--smoke-test";
 
 IApplication app = Application.Create ().Init ();
 
@@ -28,7 +28,7 @@ Color? result = app.GetResult () as Color?;
 // Shut down the app with Dispose before we can use Console.WriteLine
 app.Dispose ();
 
-if (result is { })
+if (result is not null)
 {
     Console.WriteLine (@$"Selected Color: {result}");
 }
@@ -51,7 +51,7 @@ public class ColorPickerView : Runnable<Color?>
         Width = Dim.Auto ();
 
         // Add instructions
-        var instructions = new Label
+        Label instructions = new()
         {
             Text = "Use arrow keys to select a color, Enter to accept",
             X = Pos.Center (),
@@ -63,7 +63,7 @@ public class ColorPickerView : Runnable<Color?>
         {
             X = Pos.Center (),
             Y = Pos.Bottom (instructions),
-            Style = new ColorPickerStyle ()
+            Style = new ColorPickerStyle
             {
                 ShowColorName = true,
                 ShowTextFields = true
@@ -81,12 +81,12 @@ public class ColorPickerView : Runnable<Color?>
         };
 
         okButton.Accepting += (s, e) =>
-                              {
-                                  // Extract result before stopping
-                                  Result = colorPicker.Value;
-                                  RequestStop ();
-                                  e.Handled = true;
-                              };
+        {
+            // Extract result before stopping
+            Result = colorPicker.Value;
+            RequestStop ();
+            e.Handled = true;
+        };
 
         // Create Cancel button
         Button cancelButton = new ()
@@ -97,11 +97,11 @@ public class ColorPickerView : Runnable<Color?>
         };
 
         cancelButton.Accepting += (s, e) =>
-                                  {
-                                      // Don't set result - leave as null
-                                      RequestStop ();
-                                      e.Handled = true;
-                                  };
+        {
+            // Don't set result - leave as null
+            RequestStop ();
+            e.Handled = true;
+        };
 
         // Add views
         Add (instructions, colorPicker, okButton, cancelButton);

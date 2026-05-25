@@ -27,7 +27,7 @@ public class ExampleSmokeTests
     [InlineData ("PromptExample")]
     public async Task Example_StartsAndExitsCleanly (string projectName)
     {
-        string projectPath = Path.Combine (SolutionRoot, projectName);
+        var projectPath = Path.Combine (SolutionRoot, projectName);
 
         Assert.True (Directory.Exists (projectPath), $"Project directory not found: {projectPath}");
 
@@ -43,14 +43,14 @@ public class ExampleSmokeTests
         };
 
         // DisableRealDriverIO prevents the driver from probing the terminal
-        psi.Environment["DisableRealDriverIO"] = "1";
+        psi.Environment ["DisableRealDriverIO"] = "1";
 
         using Process? process = Process.Start (psi);
 
         Assert.NotNull (process);
 
-        string stdout = await process.StandardOutput.ReadToEndAsync (TestContext.Current.CancellationToken);
-        string stderr = await process.StandardError.ReadToEndAsync (TestContext.Current.CancellationToken);
+        var stdout = await process.StandardOutput.ReadToEndAsync (TestContext.Current.CancellationToken);
+        var stderr = await process.StandardError.ReadToEndAsync (TestContext.Current.CancellationToken);
 
         using CancellationTokenSource cts = new (Timeout);
 
@@ -60,9 +60,10 @@ public class ExampleSmokeTests
         }
         catch (OperationCanceledException)
         {
-            process.Kill (entireProcessTree: true);
+            process.Kill (true);
 
-            Assert.Fail ($"{projectName} did not exit within {Timeout.TotalSeconds}s.\nStdout: {stdout}\nStderr: {stderr}");
+            Assert.Fail (
+                $"{projectName} did not exit within {Timeout.TotalSeconds}s.\nStdout: {stdout}\nStderr: {stderr}");
         }
 
         Assert.True (
@@ -74,7 +75,7 @@ public class ExampleSmokeTests
 
     private static string FindSolutionRoot ()
     {
-        string? dir = AppContext.BaseDirectory;
+        var dir = AppContext.BaseDirectory;
 
         while (dir is not null)
         {
@@ -87,12 +88,12 @@ public class ExampleSmokeTests
         }
 
         // Fallback: try relative to the test assembly
-        string? assemblyDir = Path.GetDirectoryName (typeof (ExampleSmokeTests).Assembly.Location);
+        var assemblyDir = Path.GetDirectoryName (typeof (ExampleSmokeTests).Assembly.Location);
 
         if (assemblyDir is not null)
         {
             // Walk up from bin/Debug/net10.0 -> tests/Examples.SmokeTests -> tests -> root
-            string candidate = Path.GetFullPath (Path.Combine (assemblyDir, "..", "..", "..", "..", ".."));
+            var candidate = Path.GetFullPath (Path.Combine (assemblyDir, "..", "..", "..", "..", ".."));
 
             if (File.Exists (Path.Combine (candidate, "Examples.sln")))
             {

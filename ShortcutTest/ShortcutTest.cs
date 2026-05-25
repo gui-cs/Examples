@@ -13,7 +13,7 @@ ConfigurationManager.Enable (ConfigLocations.All);
 
 using IApplication app = Application.Create ().Init ();
 
-bool smokeTest = args.Length > 0 && args[0] == "--smoke-test";
+var smokeTest = args.Length > 0 && args [0] == "--smoke-test";
 
 if (smokeTest)
 {
@@ -53,7 +53,7 @@ public sealed class ShortcutTestWindow : Window
         // Test Shortcut 1: CheckBox CommandView
         CheckBox cb1 = new () { Id = "cb1", Text = "Option 1", CanFocus = false };
 
-        var shortcut1 = new Shortcut
+        Shortcut shortcut1 = new()
         {
             Id = "shortcut1",
             HelpText = "Option1",
@@ -66,7 +66,7 @@ public sealed class ShortcutTestWindow : Window
         Add (shortcut1);
 
         // Test Shortcut 2: CheckBox CommandView (CanFocus = true)
-        var shortcut2 = new Shortcut
+        Shortcut shortcut2 = new()
         {
             Id = "shortcut2",
             HelpText = "Option2",
@@ -79,7 +79,7 @@ public sealed class ShortcutTestWindow : Window
         Add (shortcut2);
 
         // Test Shortcut 3: Button CommandView
-        var shortcut3 = new Shortcut
+        Shortcut shortcut3 = new()
         {
             Id = "shortcut3",
             HelpText = "Button",
@@ -92,12 +92,13 @@ public sealed class ShortcutTestWindow : Window
         Add (shortcut3);
 
         // Instructions
-        var instructions = new Label
+        Label instructions = new()
         {
             X = 0,
             Y = Pos.Bottom (shortcut3) + 2,
             Width = Dim.Fill () - Dim.Width (_eventLogView),
-            Text = "Press F5, F6, or F7 to trigger shortcuts.\nClick checkboxes with mouse.\nWatch event log to see command propagation."
+            Text =
+                "Press F5, F6, or F7 to trigger shortcuts.\nClick checkboxes with mouse.\nWatch event log to see command propagation."
         };
         Add (instructions);
 
@@ -105,45 +106,50 @@ public sealed class ShortcutTestWindow : Window
         Activating += (_, args) => LogEvent ("Window.Activating", args);
 
         Accepting += (_, args) =>
-                     {
-                         LogEvent ("Window.Accepting", args);
-                         args.Handled = true;
-                     };
+        {
+            LogEvent ("Window.Accepting", args);
+            args.Handled = true;
+        };
 
         foreach (Shortcut shortcut in SubViews.OfType<Shortcut> ())
         {
             shortcut.Activating += (s, args) =>
-                                   {
-                                       if (args.Handled)
-                                       {
-                                           return;
-                                       }
+            {
+                if (args.Handled)
+                {
+                    return;
+                }
 
-                                       LogEvent ($"{(s as View)?.Id}", args);
-                                   };
+                LogEvent ($"{(s as View)?.Id}", args);
+            };
             shortcut.Accepting += (s, args) => { LogEvent ($"{(s as View)?.Id}", args); };
 
             shortcut.CommandView!.Activating += (s, args) =>
-                                               {
-                                                   if (args.Handled)
-                                                   {
-                                                       return;
-                                                   }
-                                                   LogEvent ($"{(s as View)?.Id}", args);
-                                               };
+            {
+                if (args.Handled)
+                {
+                    return;
+                }
+
+                LogEvent ($"{(s as View)?.Id}", args);
+            };
 
             shortcut.CommandView!.Accepting += (s, args) =>
-                                              {
-                                                  if (args.Handled)
-                                                  {
-                                                      return;
-                                                  }
-                                                  LogEvent ($"{(s as View)?.Id}", args);
-                                              };
+            {
+                if (args.Handled)
+                {
+                    return;
+                }
+
+                LogEvent ($"{(s as View)?.Id}", args);
+            };
 
             if (shortcut.CommandView! is CheckBox cb)
             {
-                cb.ValueChanged += (s, args) => { LogEvent ($"{(s as View)?.Id} {args.OldValue} -> {args.NewValue}", null); };
+                cb.ValueChanged += (s, args) =>
+                {
+                    LogEvent ($"{(s as View)?.Id} {args.OldValue} -> {args.NewValue}", null);
+                };
             }
         }
     }
@@ -160,8 +166,9 @@ public sealed class ShortcutTestWindow : Window
         {
             View? sourceView = null;
             args.Context?.Source?.TryGetTarget (out sourceView);
-            string bindingType = args.Context?.Binding?.GetType ().Name ?? "null";
-            entry = $"{source}: Cmd={args.Context?.Command}, Binding={bindingType}, Src={sourceView?.Id ?? "null"}, Handled={args.Handled}";
+            var bindingType = args.Context?.Binding?.GetType ().Name ?? "null";
+            entry =
+                $"{source}: Cmd={args.Context?.Command}, Binding={bindingType}, Src={sourceView?.Id ?? "null"}, Handled={args.Handled}";
         }
 
         _eventLog.Add (entry);

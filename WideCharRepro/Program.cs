@@ -24,7 +24,6 @@
 //   If the '|' separators are not vertically aligned, the terminal is not
 //   correctly handling wide character cursor advancement.
 
-using System.Globalization;
 using System.Text;
 
 Console.OutputEncoding = Encoding.UTF8;
@@ -36,25 +35,28 @@ if (Environment.OSVersion.Platform == PlatformID.Win32NT)
     Console.Write ("\x1b[?25l"); // Hide cursor for cleaner output
 }
 
-Console.WriteLine ("ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ");
+Console.WriteLine (
+    "ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ");
 Console.WriteLine ("  Wide Character Rendering Test");
 Console.WriteLine ("  If '|' separators are NOT vertically aligned, the terminal has");
 Console.WriteLine ("  a wide-character cursor advancement bug.");
-Console.WriteLine ("ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ");
+Console.WriteLine (
+    "ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ");
 Console.WriteLine ();
 
 // --- Test 1: Emoji (U+1F600 - U+1F64F) ---
 Console.WriteLine ("TEST 1: Emoji (each should occupy 2 columns)");
-Console.WriteLine ("ΓöîΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÉ");
+Console.WriteLine (
+    "ΓöîΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÉ");
 
-int startCodepoint = 0x1F600;
-for (int row = 0; row < 4; row++)
+var startCodepoint = 0x1F600;
+for (var row = 0; row < 4; row++)
 {
     Console.Write ("Γöé");
-    for (int col = 0; col < 16; col++)
+    for (var col = 0; col < 16; col++)
     {
-        int cp = startCodepoint + (row * 16) + col;
-        string ch = char.ConvertFromUtf32 (cp);
+        var cp = startCodepoint + row * 16 + col;
+        var ch = char.ConvertFromUtf32 (cp);
         Console.Write (ch);
         Console.Write ("Γöé");
     }
@@ -62,21 +64,23 @@ for (int row = 0; row < 4; row++)
     Console.WriteLine ();
 }
 
-Console.WriteLine ("ΓööΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÿ");
+Console.WriteLine (
+    "ΓööΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÿ");
 Console.WriteLine ();
 
 // --- Test 2: CJK Ideographs (U+4E00+) ---
 Console.WriteLine ("TEST 2: CJK Ideographs (each should occupy 2 columns)");
-Console.WriteLine ("ΓöîΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÉ");
+Console.WriteLine (
+    "ΓöîΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÉ");
 
 startCodepoint = 0x4E00;
-for (int row = 0; row < 4; row++)
+for (var row = 0; row < 4; row++)
 {
     Console.Write ("Γöé");
-    for (int col = 0; col < 16; col++)
+    for (var col = 0; col < 16; col++)
     {
-        int cp = startCodepoint + (row * 16) + col;
-        string ch = char.ConvertFromUtf32 (cp);
+        var cp = startCodepoint + row * 16 + col;
+        var ch = char.ConvertFromUtf32 (cp);
         Console.Write (ch);
         Console.Write ("Γöé");
     }
@@ -84,7 +88,8 @@ for (int row = 0; row < 4; row++)
     Console.WriteLine ();
 }
 
-Console.WriteLine ("ΓööΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÿ");
+Console.WriteLine (
+    "ΓööΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÿ");
 Console.WriteLine ();
 
 // --- Test 3: Mixed narrow + wide on same line ---
@@ -113,12 +118,12 @@ string[] testRows =
     "Γöé≡ƒÉ╢Γöé≡ƒÉ▒Γöé≡ƒÉ¡Γöé≡ƒÉ╣Γöé≡ƒÉ░Γöé≡ƒªèΓöé≡ƒÉ╗Γöé≡ƒÉ╝Γöé",
     "ΓöéΓöÇΓöÇΓöéΓöÇΓöÇΓöéΓöÇΓöÇΓöéΓöÇΓöÇΓöéΓöÇΓöÇΓöéΓöÇΓöÇΓöéΓöÇΓöÇΓöéΓöÇΓöÇΓöé",
     "ΓöéΣ╜áΓöéσÑ╜ΓöéΣ╕ûΓöéτòîΓöéµ╡ïΓöéΦ»òΓöéσ«╜Γöéσ¡ùΓöé",
-    "ΓöéΓöÇΓöÇΓöéΓöÇΓöÇΓöéΓöÇΓöÇΓöéΓöÇΓöÇΓöéΓöÇΓöÇΓöéΓöÇΓöÇΓöéΓöÇΓöÇΓöéΓöÇΓöÇΓöé",
+    "ΓöéΓöÇΓöÇΓöéΓöÇΓöÇΓöéΓöÇΓöÇΓöéΓöÇΓöÇΓöéΓöÇΓöÇΓöéΓöÇΓöÇΓöéΓöÇΓöÇΓöéΓöÇΓöÇΓöé"
 ];
 
 Console.WriteLine ("ΓöîΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÉ");
 
-foreach (string line in testRows)
+foreach (var line in testRows)
 {
     Console.WriteLine (line);
 }
@@ -140,12 +145,14 @@ Console.WriteLine ("the terminal is miscounting wide character widths.");
 Console.WriteLine ();
 
 // --- Summary ---
-Console.WriteLine ("ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ");
+Console.WriteLine (
+    "ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ");
 Console.WriteLine ("  DIAGNOSIS:");
 Console.WriteLine ("  ΓÇó If all grids have aligned 'Γöé' separators ΓåÆ terminal is CORRECT");
 Console.WriteLine ("  ΓÇó If grids are torn/misaligned ΓåÆ terminal has wcwidth bug");
 Console.WriteLine ("  ΓÇó Common cause: terminal treats wide chars as 1 column, not 2");
-Console.WriteLine ("ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ");
+Console.WriteLine (
+    "ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ");
 
 // Show cursor again
 if (Environment.OSVersion.Platform == PlatformID.Win32NT)

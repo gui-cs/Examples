@@ -16,7 +16,7 @@ public static class Program
 {
     private static async Task Main (string[] args)
     {
-        bool smokeTest = args.Length > 0 && args[0] == "--smoke-test";
+        var smokeTest = args.Length > 0 && args [0] == "--smoke-test";
 
         if (smokeTest)
         {
@@ -52,7 +52,8 @@ public static class Program
 
         #region The code in this region is not intended for use in a self-contained single-file. It's just here to make sure there is no functionality break with localization in Terminal.Gui using single-file
 
-        if (Equals (Thread.CurrentThread.CurrentUICulture, CultureInfo.InvariantCulture) && Application.SupportedCultures?.Count == 0)
+        if (Equals (Thread.CurrentThread.CurrentUICulture, CultureInfo.InvariantCulture) &&
+            Application.SupportedCultures?.Count == 0)
         {
             // Only happens if the project has <InvariantGlobalization>true</InvariantGlobalization>
             Debug.Assert (Application.SupportedCultures.Count == 0);
@@ -86,9 +87,9 @@ public class ExampleWindow : Runnable<string>
         Title = $"Example App ({Application.GetDefaultKey (Command.Quit)} to quit)";
 
         // Create input components and labels
-        var usernameLabel = new Label { Text = "Username:" };
+        Label usernameLabel = new() { Text = "Username:" };
 
-        var userNameText = new TextField
+        TextField userNameText = new()
         {
             // Position text field adjacent to the label
             X = Pos.Right (usernameLabel) + 1,
@@ -97,9 +98,10 @@ public class ExampleWindow : Runnable<string>
             Width = Dim.Fill ()
         };
 
-        var passwordLabel = new Label { Text = "Password:", X = Pos.Left (usernameLabel), Y = Pos.Bottom (usernameLabel) + 1 };
+        Label passwordLabel = new()
+            { Text = "Password:", X = Pos.Left (usernameLabel), Y = Pos.Bottom (usernameLabel) + 1 };
 
-        var passwordText = new TextField
+        TextField passwordText = new()
         {
             Secret = true,
 
@@ -110,7 +112,7 @@ public class ExampleWindow : Runnable<string>
         };
 
         // Create login button
-        var btnLogin = new Button
+        Button btnLogin = new()
         {
             Text = "Login",
             Y = Pos.Bottom (passwordLabel) + 1,
@@ -122,18 +124,18 @@ public class ExampleWindow : Runnable<string>
 
         // When login button is clicked display a message popup
         btnLogin.Accepted += (_, _) =>
-                              {
-                                  if (userNameText.Text == "admin" && passwordText.Text == "password")
-                                  {
-                                      MessageBox.Query (App!, "Logging In", "Login Successful", "Ok");
-                                      Result = userNameText.Text;
-                                      App?.RequestStop ();
-                                  }
-                                  else
-                                  {
-                                      MessageBox.ErrorQuery (App!, "Logging In", "Incorrect username or password", "Ok");
-                                  }
-                              };
+        {
+            if (userNameText.Text == "admin" && passwordText.Text == "password")
+            {
+                MessageBox.Query (App!, "Logging In", "Login Successful", "Ok");
+                Result = userNameText.Text;
+                App?.RequestStop ();
+            }
+            else
+            {
+                MessageBox.ErrorQuery (App!, "Logging In", "Incorrect username or password", "Ok");
+            }
+        };
 
         // Add the views to the Window
         Add (usernameLabel, userNameText, passwordLabel, passwordText, btnLogin);

@@ -1,6 +1,7 @@
-#nullable enable
+using System.Drawing;
 using Terminal.Gui.Drawing;
 using Terminal.Gui.ViewBase;
+using Color = Terminal.Gui.Drawing.Color;
 using TgAttribute = Terminal.Gui.Drawing.Attribute;
 
 /// <summary>
@@ -21,13 +22,13 @@ public sealed class Logo : View
 
     public Logo ()
     {
-        int artWidth = _artLines.Select (line => line.Length).Prepend (0).Max ();
+        var artWidth = _artLines.Select (line => line.Length).Prepend (0).Max ();
 
         Width = artWidth;
         Height = _artLines.Length;
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     protected override bool OnDrawingContent (DrawContext? context)
     {
         List<Color> stops =
@@ -43,19 +44,20 @@ public sealed class Logo : View
         Gradient gradient = new (stops, steps);
 
         var artHeight = 3;
-        int artWidth = _artLines[0].Length;
+        var artWidth = _artLines [0].Length;
 
-        Dictionary<System.Drawing.Point, Color> colorMap = gradient.BuildCoordinateColorMapping (artHeight, artWidth, GradientDirection.Diagonal);
+        Dictionary<Point, Color> colorMap =
+            gradient.BuildCoordinateColorMapping (artHeight, artWidth, GradientDirection.Diagonal);
 
         TgAttribute normalAttr = GetAttributeForRole (VisualRole.Normal);
 
         for (var row = 0; row < _artLines.Length; row++)
         {
-            string line = _artLines[row];
+            var line = _artLines [row];
 
             for (var col = 0; col < line.Length; col++)
             {
-                char ch = line[col];
+                var ch = line [col];
 
                 if (ch == ' ')
                 {
@@ -64,7 +66,7 @@ public sealed class Logo : View
 
                 if (row < 3)
                 {
-                    System.Drawing.Point coord = new (col, row);
+                    Point coord = new (col, row);
 
                     if (colorMap.TryGetValue (coord, out Color color))
                     {

@@ -15,7 +15,7 @@ ConfigurationManager.Enable (ConfigLocations.All);
 
 IApplication app = Application.Create ().Init ();
 
-bool smokeTest = args.Length > 0 && args[0] == "--smoke-test";
+var smokeTest = args.Length > 0 && args [0] == "--smoke-test";
 
 if (smokeTest)
 {
@@ -26,7 +26,8 @@ if (smokeTest)
 
     return;
 }
-string? userName = app.Run<ExampleWindow> ().GetResult<string> ();
+
+var userName = app.Run<ExampleWindow> ().GetResult<string> ();
 app.Dispose ();
 
 // To see this output on the screen it must be done after Dispose,
@@ -48,9 +49,9 @@ public sealed class ExampleWindow : Runnable<string?>
         Title = $"Example App ({Application.GetDefaultKey (Command.Quit)} to quit)";
 
         // Create input components and labels
-        var usernameLabel = new Label { Text = "Username:" };
+        Label usernameLabel = new() { Text = "Username:" };
 
-        var userNameText = new TextField
+        TextField userNameText = new()
         {
             // Position text field adjacent to the label
             X = Pos.Right (usernameLabel) + 1,
@@ -59,9 +60,10 @@ public sealed class ExampleWindow : Runnable<string?>
             Width = Dim.Fill ()
         };
 
-        var passwordLabel = new Label { Text = "Password:", X = Pos.Left (usernameLabel), Y = Pos.Bottom (usernameLabel) + 1 };
+        Label passwordLabel = new()
+            { Text = "Password:", X = Pos.Left (usernameLabel), Y = Pos.Bottom (usernameLabel) + 1 };
 
-        var passwordText = new TextField
+        TextField passwordText = new()
         {
             Secret = true,
 
@@ -72,7 +74,7 @@ public sealed class ExampleWindow : Runnable<string?>
         };
 
         // Create login button
-        var btnLogin = new Button
+        Button btnLogin = new()
         {
             Text = "Login",
             Y = Pos.Bottom (passwordLabel) + 1,
@@ -84,24 +86,23 @@ public sealed class ExampleWindow : Runnable<string?>
 
         // When login button is clicked display a message popup
         btnLogin.Accepting += (s, e) =>
-                              {
-                                  if (userNameText.Text == "admin" && passwordText.Text == "password")
-                                  {
-                                      MessageBox.Query (App!, "Logging In", "Login Successful", "Ok");
-                                      Result = userNameText.Text;
-                                      App!.RequestStop ();
-                                  }
-                                  else
-                                  {
-                                      MessageBox.ErrorQuery ((s as View)?.App!, "Logging In", "Incorrect username or password", "Ok");
-                                  }
+        {
+            if (userNameText.Text == "admin" && passwordText.Text == "password")
+            {
+                MessageBox.Query (App!, "Logging In", "Login Successful", "Ok");
+                Result = userNameText.Text;
+                App!.RequestStop ();
+            }
+            else
+            {
+                MessageBox.ErrorQuery ((s as View)?.App!, "Logging In", "Incorrect username or password", "Ok");
+            }
 
-                                  // When Accepting is handled, set e.Handled to true to prevent further processing.
-                                  e.Handled = true;
-                              };
+            // When Accepting is handled, set e.Handled to true to prevent further processing.
+            e.Handled = true;
+        };
 
         // Add the views to the Window
         Add (usernameLabel, userNameText, passwordLabel, passwordText, btnLogin);
     }
 }
-

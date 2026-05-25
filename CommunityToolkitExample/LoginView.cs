@@ -1,6 +1,5 @@
 using CommunityToolkit.Mvvm.Messaging;
 using Terminal.Gui.App;
-using Terminal.Gui.ViewBase;
 using Terminal.Gui.Input;
 
 namespace CommunityToolkitExample;
@@ -14,27 +13,28 @@ internal partial class LoginView : IRecipient<Message<LoginActions>>
         ViewModel = viewModel;
         InitializeComponent ();
         usernameInput.TextChanged += (_, _) =>
-                                     {
-                                         ViewModel.Username = usernameInput.Text;
-                                     };
+        {
+            ViewModel.Username = usernameInput.Text;
+        };
         passwordInput.TextChanged += (_, _) =>
-                                     {
-                                         ViewModel.Password = passwordInput.Text;
-                                     };
+        {
+            ViewModel.Password = passwordInput.Text;
+        };
         loginButton.Accepting += (_, e) =>
-                              {
-                                  if (!ViewModel.CanLogin) { return; }
-                                  ViewModel.LoginCommand.Execute (null);
-                                  // When Accepting is handled, set e.Handled to true to prevent further processing.
-                                  e.Handled = true;
-                              };
+        {
+            if (!ViewModel.CanLogin) { return; }
+
+            ViewModel.LoginCommand.Execute (null);
+            // When Accepting is handled, set e.Handled to true to prevent further processing.
+            e.Handled = true;
+        };
 
         clearButton.Accepting += (_, e) =>
-                              {
-                                  ViewModel.ClearCommand.Execute (null);
-                                  // When Accepting is handled, set e.Handled to true to prevent further processing.
-                                  e.Handled = true;
-                              };
+        {
+            ViewModel.ClearCommand.Execute (null);
+            // When Accepting is handled, set e.Handled to true to prevent further processing.
+            e.Handled = true;
+        };
 
         Initialized += (_, _) => { ViewModel.Initialized (); };
     }
@@ -46,24 +46,25 @@ internal partial class LoginView : IRecipient<Message<LoginActions>>
         switch (message.Value)
         {
             case LoginActions.Clear:
-                {
-                    loginProgressLabel.Text = ViewModel.LoginProgressMessage;
-                    validationLabel.Text = ViewModel.ValidationMessage;
-                    validationLabel.SetScheme (ViewModel.ValidationScheme);
-                    break;
-                }
+            {
+                loginProgressLabel.Text = ViewModel.LoginProgressMessage;
+                validationLabel.Text = ViewModel.ValidationMessage;
+                validationLabel.SetScheme (ViewModel.ValidationScheme);
+                break;
+            }
             case LoginActions.LoginProgress:
-                {
-                    loginProgressLabel.Text = ViewModel.LoginProgressMessage;
-                    break;
-                }
+            {
+                loginProgressLabel.Text = ViewModel.LoginProgressMessage;
+                break;
+            }
             case LoginActions.Validation:
-                {
-                    validationLabel.Text = ViewModel.ValidationMessage;
-                    validationLabel.SetScheme (ViewModel.ValidationScheme);
-                    break;
-                }
+            {
+                validationLabel.Text = ViewModel.ValidationMessage;
+                validationLabel.SetScheme (ViewModel.ValidationScheme);
+                break;
+            }
         }
+
         SetText ();
     }
 

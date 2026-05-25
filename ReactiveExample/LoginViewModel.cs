@@ -21,61 +21,57 @@ namespace ReactiveExample;
 [DataContract]
 public partial class LoginViewModel : ReactiveObject
 {
-    [IgnoreDataMember]
-    [ObservableAsProperty] private bool _isValid;
+    [IgnoreDataMember] [ObservableAsProperty]
+    private bool _isValid;
 
-    [IgnoreDataMember]
-    [ObservableAsProperty] private int _passwordLength;
+    [DataMember] [Reactive] private string _password = string.Empty;
 
-    [IgnoreDataMember]
-    [ObservableAsProperty] private int _usernameLength;
+    [IgnoreDataMember] [ObservableAsProperty]
+    private int _passwordLength;
 
-    [DataMember]
-    [Reactive] private string _password = string.Empty;
+    [DataMember] [Reactive] private string _username = string.Empty;
 
-    [DataMember]
-    [Reactive] private string _username = string.Empty;
+    [IgnoreDataMember] [ObservableAsProperty]
+    private int _usernameLength;
 
     public LoginViewModel ()
     {
         IObservable<bool> canLogin = this.WhenAnyValue
-            (
-                x => x.Username,
-                x => x.Password,
-                (username, password) =>
-                    !string.IsNullOrEmpty (username) && !string.IsNullOrEmpty (password)
-            );
+        (
+            x => x.Username,
+            x => x.Password,
+            (username, password) =>
+                !string.IsNullOrEmpty (username) && !string.IsNullOrEmpty (password)
+        );
 
         _isValidHelper = canLogin.ToProperty (this, x => x.IsValid);
 
         Login = ReactiveCommand.CreateFromTask<CommandEventArgs>
-            (
-                e => Task.Delay (TimeSpan.FromSeconds (1)),
-                canLogin
-            );
+        (
+            e => Task.Delay (TimeSpan.FromSeconds (1)),
+            canLogin
+        );
 
         _usernameLengthHelper = this
-                          .WhenAnyValue (x => x.Username)
-                          .Select (name => name.Length)
-                          .ToProperty (this, x => x.UsernameLength);
+            .WhenAnyValue (x => x.Username)
+            .Select (name => name.Length)
+            .ToProperty (this, x => x.UsernameLength);
 
         _passwordLengthHelper = this
-                          .WhenAnyValue (x => x.Password)
-                          .Select (password => password.Length)
-                          .ToProperty (this, x => x.PasswordLength);
+            .WhenAnyValue (x => x.Password)
+            .Select (password => password.Length)
+            .ToProperty (this, x => x.PasswordLength);
 
-        ClearCommand.Subscribe (
-                         unit =>
-                         {
-                             Username = string.Empty;
-                             Password = string.Empty;
-                         }
-                        );
+        ClearCommand.Subscribe (unit =>
+            {
+                Username = string.Empty;
+                Password = string.Empty;
+            }
+        );
     }
+
+    [IgnoreDataMember] public ReactiveCommand<CommandEventArgs, Unit> Login { get; }
 
     [ReactiveCommand]
     public void Clear (CommandEventArgs args) { }
-
-    [IgnoreDataMember]
-    public ReactiveCommand<CommandEventArgs, Unit> Login { get; }
 }

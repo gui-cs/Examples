@@ -13,27 +13,22 @@ internal partial class LoginViewModel : ObservableObject
     private const string LOGGING_IN_PROGRESS_MESSAGE = "Logging in...";
     private const string VALID_LOGIN_MESSAGE = "The input is valid!";
 
-    [ObservableProperty]
-    private bool _canLogin;
+    [ObservableProperty] private bool _canLogin;
 
-    [ObservableProperty]
-    private string _loginProgressMessage;
+    [ObservableProperty] private string _loginProgressMessage;
 
     private string _password;
 
-    [ObservableProperty]
-    private string _passwordLengthMessage;
+    [ObservableProperty] private string _passwordLengthMessage;
 
     private string _username;
 
-    [ObservableProperty]
-    private string _usernameLengthMessage;
+    [ObservableProperty] private string _usernameLengthMessage;
 
-    [ObservableProperty]
-    private Scheme? _validationScheme;
+    [ObservableProperty] private string _validationMessage;
 
-    [ObservableProperty]
-    private string _validationMessage;
+    [ObservableProperty] private Scheme? _validationScheme;
+
     public LoginViewModel ()
     {
         _loginProgressMessage = string.Empty;
@@ -46,8 +41,8 @@ internal partial class LoginViewModel : ObservableObject
         Username = string.Empty;
         Password = string.Empty;
 
-        ClearCommand = new (Clear);
-        LoginCommand = new (Execute);
+        ClearCommand = new RelayCommand (Clear);
+        LoginCommand = new RelayCommand (Execute);
 
         Clear ();
 
@@ -118,6 +113,7 @@ internal partial class LoginViewModel : ObservableObject
                 ValidationScheme = CanLogin ? SchemeManager.GetScheme ("Base") : SchemeManager.GetScheme ("Error");
                 break;
         }
+
         WeakReferenceMessenger.Default.Send (new Message<LoginActions> { Value = loginAction });
     }
 

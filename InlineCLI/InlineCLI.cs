@@ -14,6 +14,7 @@ using Terminal.Gui.App;
 using Terminal.Gui.Drawing;
 using Terminal.Gui.ViewBase;
 using Terminal.Gui.Views;
+
 // ReSharper disable AccessToModifiedClosure
 
 // Set Inline mode BEFORE Init
@@ -23,7 +24,7 @@ Application.AppModel = AppModel.Inline;
 
 IApplication app = Application.Create ().Init ();
 
-bool smokeTest = args.Length > 0 && args[0] == "--smoke-test";
+var smokeTest = args.Length > 0 && args [0] == "--smoke-test";
 
 if (smokeTest)
 {
@@ -48,8 +49,8 @@ public sealed class InlinePromptView : Window
 {
     private readonly Shortcut? _cursorShortcut;
     private readonly Shortcut? _driverShortcut;
-    private readonly Shortcut? _screenShortcut;
     private readonly Shortcut? _frameShortcut;
+    private readonly Shortcut? _screenShortcut;
 
     public InlinePromptView ()
     {
@@ -64,7 +65,8 @@ public sealed class InlinePromptView : Window
         Height = Dim.Auto ();
 
         StatusBar statusBar = new () { AlignmentModes = AlignmentModes.IgnoreFirstOrLast, SchemeName = SchemeName };
-        Shortcut itemCountShortcut = new () { Title = "No items", MouseHighlightStates = MouseState.None, Enabled = false };
+        Shortcut itemCountShortcut = new ()
+            { Title = "No items", MouseHighlightStates = MouseState.None, Enabled = false };
 
         _cursorShortcut = new Shortcut { Text = "Cursor", MouseHighlightStates = MouseState.None, Enabled = false };
         _driverShortcut = new Shortcut { Text = "Driver", MouseHighlightStates = MouseState.None, Enabled = false };
@@ -98,24 +100,25 @@ public sealed class InlinePromptView : Window
         outputList.Border.Thickness = new Thickness (0, 0, 0, 1);
 
         outputList.SubViewsLaidOut += (_, _) =>
-                                      {
-                                          if (outputList.Index is { })
-                                          {
-                                              outputList.Viewport = outputList.Viewport with { Y = outputList.Index.Value };
-                                          }
-                                      };
+        {
+            if (outputList.Index is not null)
+            {
+                outputList.Viewport = outputList.Viewport with { Y = outputList.Index.Value };
+            }
+        };
 
         outputList.GettingAttributeForRole += (sender, args) =>
-                                              {
-                                                  var view = sender as View;
+        {
+            View? view = sender as View;
 
-                                                  if (args.Role != VisualRole.Active)
-                                                  {
-                                                      return;
-                                                  }
-                                                  args.Result = view?.GetAttributeForRole (VisualRole.Normal);
-                                                  args.Handled = true;
-                                              };
+            if (args.Role != VisualRole.Active)
+            {
+                return;
+            }
+
+            args.Result = view?.GetAttributeForRole (VisualRole.Normal);
+            args.Handled = true;
+        };
 
         outputList.SetSource (items);
 
@@ -132,20 +135,21 @@ public sealed class InlinePromptView : Window
 
         TextField inputField = new ()
         {
-            X = Pos.Right (inputIndicator), Y = Pos.Top (inputIndicator), Width = Dim.Fill (), BorderStyle = inputIndicator.BorderStyle
+            X = Pos.Right (inputIndicator), Y = Pos.Top (inputIndicator), Width = Dim.Fill (),
+            BorderStyle = inputIndicator.BorderStyle
         };
         inputField.Border.Thickness = new Thickness (0, 0, 0, 1);
 
         inputField.Accepted += (_, _) =>
-                               {
-                                   var text = $"{Glyphs.BlackCircle} {inputField.Text}";
+        {
+            var text = $"{Glyphs.BlackCircle} {inputField.Text}";
 
-                                   items.Add (text);
-                                   outputList.MoveEnd ();
+            items.Add (text);
+            outputList.MoveEnd ();
 
-                                   inputField.Text = string.Empty;
-                                   itemCountShortcut.Title = $"{items.Count}";
-                               };
+            inputField.Text = string.Empty;
+            itemCountShortcut.Title = $"{items.Count}";
+        };
 
         statusBar.Add (_cursorShortcut, _driverShortcut, _screenShortcut, _frameShortcut, itemCountShortcut);
 
@@ -163,29 +167,30 @@ public sealed class InlinePromptView : Window
         // terminal can display. Subtracts all sibling and adornment heights from App.Screen.Height.
         int GetMaxListHeight ()
         {
-            int screenHeight = App?.Driver?.Screen.Height ?? 100;
+            var screenHeight = App?.Driver?.Screen.Height ?? 100;
 
             // Adornments of the containing InlinePromptView (this Window)
-            int windowAdornments = (Border?.Thickness.Vertical ?? 0) + (Margin?.Thickness.Vertical ?? 0) + (Padding?.Thickness.Vertical ?? 0);
+            var windowAdornments = (Border?.Thickness.Vertical ?? 0) + (Margin?.Thickness.Vertical ?? 0) +
+                                   (Padding?.Thickness.Vertical ?? 0);
 
             // Heights of sibling views (everything except the list itself)
-            int siblingHeight = (logo?.Frame.Height ?? 0)
+            var siblingHeight = (logo?.Frame.Height ?? 0)
                                 + (infoLabel?.Frame.Height ?? 0)
                                 + (inputIndicator?.Frame.Height ?? 0)
                                 + (statusBar?.Frame.Height ?? 0);
 
             // The list's own adornment overhead (border bottom = 1)
-            int listAdornments = (outputList.Border?.Thickness.Vertical ?? 0)
+            var listAdornments = (outputList.Border?.Thickness.Vertical ?? 0)
                                  + (outputList.Margin?.Thickness.Vertical ?? 0)
                                  + (outputList.Padding?.Thickness.Vertical ?? 0);
 
-            int maxContent = screenHeight - windowAdornments - siblingHeight - listAdornments;
+            var maxContent = screenHeight - windowAdornments - siblingHeight - listAdornments;
 
             return Math.Max (1, maxContent);
         }
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     protected override void OnIsRunningChanged (bool newIsRunning)
     {
         base.OnIsRunningChanged (newIsRunning);
@@ -202,12 +207,17 @@ public sealed class InlinePromptView : Window
         }
     }
 
-    private void AppOnScreenChanged (object? sender, EventArgs<Rectangle> e) => _screenShortcut?.Title = $"{Format (e.Value)}";
+    private void AppOnScreenChanged (object? sender, EventArgs<Rectangle> e)
+    {
+        _screenShortcut?.Title = $"{Format (e.Value)}";
+    }
 
-    private void DriverOnSizeChanged (object? sender, SizeChangedEventArgs e) =>
+    private void DriverOnSizeChanged (object? sender, SizeChangedEventArgs e)
+    {
         _driverShortcut?.Title = $"{Format (new Rectangle (new Point (0, 0), e.Size!.Value))}";
+    }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     protected override void OnFrameChanged (in Rectangle frame)
     {
         base.OnFrameChanged (in frame);
@@ -218,6 +228,10 @@ public sealed class InlinePromptView : Window
         _frameShortcut?.Title = $"{Format (Frame)}";
     }
 
-    private static string Format (Rectangle? rect) =>
-        rect is null ? $"({Glyphs.Null})" : $"({rect.Value.X},{rect.Value.Y},{rect.Value.Width},{rect.Value.Height})";
+    private static string Format (Rectangle? rect)
+    {
+        return rect is null
+            ? $"({Glyphs.Null})"
+            : $"({rect.Value.X},{rect.Value.Y},{rect.Value.Width},{rect.Value.Height})";
+    }
 }

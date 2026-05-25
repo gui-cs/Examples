@@ -6,7 +6,7 @@ namespace ReactiveExample;
 public static class ViewExtensions
 {
     public static (Window MainView, TOut LastControl) AddControl<TOut> (this Window view, Action<TOut> action)
-        where TOut : View, new()
+        where TOut : View, new ()
     {
         TOut result = new ();
         action (result);
@@ -14,8 +14,9 @@ public static class ViewExtensions
         return (view, result);
     }
 
-    public static (Window MainView, TOut LastControl) AddControlAfter<TOut> (this (Window MainView, View LastControl) view, Action<View, TOut> action)
-        where TOut : View, new()
+    public static (Window MainView, TOut LastControl) AddControlAfter<TOut> (
+        this (Window MainView, View LastControl) view, Action<View, TOut> action)
+        where TOut : View, new ()
     {
         TOut result = new ();
         action (view.LastControl, result);

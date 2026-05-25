@@ -24,7 +24,7 @@ using Terminal.Gui.Views;
 using Timeout = System.Threading.Timeout;
 
 // Check for smoke test mode
-bool smokeTest = args.Length > 0 && args[0] == "--smoke-test";
+var smokeTest = args.Length > 0 && args [0] == "--smoke-test";
 
 if (smokeTest)
 {
@@ -49,7 +49,7 @@ string? initialValue = null;
 
 for (var i = 0; i < args.Length; i++)
 {
-    string arg = args[i];
+    var arg = args [i];
 
     switch (arg)
     {
@@ -57,7 +57,7 @@ for (var i = 0; i < args.Length; i++)
 
         case "--vertical" or "-v": orientation = Orientation.Vertical; break;
 
-        case "--timeout" or "-t" when i + 1 < args.Length && int.TryParse (args[i + 1], out int seconds):
+        case "--timeout" or "-t" when i + 1 < args.Length && int.TryParse (args [i + 1], out var seconds):
             timeoutSeconds = seconds;
             i++; // skip the next arg (the number)
 
@@ -68,7 +68,7 @@ for (var i = 0; i < args.Length; i++)
 
             return 1;
 
-        case "--initial" or "-i" when i + 1 < args.Length: initialValue = args[++i]; break;
+        case "--initial" or "-i" when i + 1 < args.Length: initialValue = args [++i]; break;
 
         case "--initial" or "-i":
             Console.Error.WriteLine ("Error: --initial requires an index value.");
@@ -81,7 +81,8 @@ for (var i = 0; i < args.Length; i++)
 
 if (options.Count == 0)
 {
-    Console.Error.WriteLine ("Usage: InlineSelect [--horizontal|--vertical] [--timeout <seconds>] <option1> <option2> ...");
+    Console.Error.WriteLine (
+        "Usage: InlineSelect [--horizontal|--vertical] [--timeout <seconds>] <option1> <option2> ...");
 
     return 1;
 }
@@ -98,17 +99,17 @@ OptionSelector selector = new () { Labels = options, Orientation = orientation, 
 RunnableWrapper<OptionSelector, int?> wrapper = new (selector)
 {
     Title = timeoutSeconds.HasValue
-                ? $"Select an option (Enter to accept, Esc to cancel, {timeoutSeconds}s timeout)"
-                : "Select an option (Enter to accept, Esc to cancel)",
+        ? $"Select an option (Enter to accept, Esc to cancel, {timeoutSeconds}s timeout)"
+        : "Select an option (Enter to accept, Esc to cancel)",
     Width = Dim.Fill (),
     BorderStyle = LineStyle.Rounded
 };
 
 // Apply initial value if provided — match by label (case-insensitive) or by numeric index
-if (initialValue is { })
+if (initialValue is not null)
 {
     // First try matching a label
-    int matchIndex = options.FindIndex (o => string.Equals (o, initialValue, StringComparison.OrdinalIgnoreCase));
+    var matchIndex = options.FindIndex (o => string.Equals (o, initialValue, StringComparison.OrdinalIgnoreCase));
 
     if (matchIndex >= 0)
     {
@@ -131,17 +132,17 @@ if (timeoutSeconds.HasValue)
 
     // Show terminal progress indicator counting down the timeout (OSC 9;4)
     DateTime startTime = DateTime.UtcNow;
-    int totalMs = timeoutSeconds.Value * 1000;
+    var totalMs = timeoutSeconds.Value * 1000;
 
     await using Timer progressTimer = new (_ => app.Invoke (_ =>
-                                                            {
-                                                                var elapsedMs = (int)(DateTime.UtcNow - startTime).TotalMilliseconds;
-                                                                int percent = Math.Min (elapsedMs * 100 / totalMs, 100);
-                                                                app.Driver?.ProgressIndicator?.SetValue (percent);
-                                                            }),
-                                           null,
-                                           0,
-                                           250);
+        {
+            var elapsedMs = (int)(DateTime.UtcNow - startTime).TotalMilliseconds;
+            var percent = Math.Min (elapsedMs * 100 / totalMs, 100);
+            app.Driver?.ProgressIndicator?.SetValue (percent);
+        }),
+        null,
+        0,
+        250);
 
     await app.RunAsync (wrapper, cts.Token);
 
@@ -155,13 +156,13 @@ else
     app.Run (wrapper);
 }
 
-int? result = wrapper.Result;
+var result = wrapper.Result;
 
 app.Dispose ();
 
 if (result is { } selectedIndex and >= 0 && selectedIndex < options.Count)
 {
-    Console.WriteLine (options[selectedIndex]);
+    Console.WriteLine (options [selectedIndex]);
 
     return 0;
 }

@@ -15,7 +15,7 @@ using Color = Terminal.Gui.Drawing.Color;
 
 // ReSharper disable AccessToDisposedClosure
 
-bool smokeTest = args.Length > 0 && args[0] == "--smoke-test";
+var smokeTest = args.Length > 0 && args [0] == "--smoke-test";
 
 if (smokeTest)
 {
@@ -32,7 +32,8 @@ using IApplication app = Application.Create ().Init (DriverRegistry.Names.DOTNET
 // Create a main window to host the prompts
 using Window mainWindow = new ();
 mainWindow.Title = "Prompt API Examples (Esc to quit)";
-mainWindow.Text = "This example demonstrates various uses of the Prompt API.\nPress the buttons to try different prompt types.\nPress Esc to quit.";
+mainWindow.Text =
+    "This example demonstrates various uses of the Prompt API.\nPress the buttons to try different prompt types.\nPress Esc to quit.";
 mainWindow.TextAlignment = Alignment.Center;
 
 // Initial Value TextField — entered text is applied to prompt views via IValue.TrySetValueFromString
@@ -52,22 +53,23 @@ var buttonY = 2;
 Button textFieldButton = new () { Title = "TextField (Auto-Text)", X = Pos.Center (), Y = buttonY++ };
 
 textFieldButton.Accepting += (_, _) =>
-                             {
-                                 string? result = mainWindow.Prompt<TextField, string> (beginInitHandler: prompt =>
-                                                                                        {
-                                                                                            prompt.Title = textFieldButton.Title;
-                                                                                            prompt.GetWrappedView ().Width = 40;
-                                                                                            prompt.GetWrappedView ().Text = "Default name";
+{
+    var result = mainWindow.Prompt<TextField, string> (beginInitHandler: prompt =>
+    {
+        prompt.Title = textFieldButton.Title;
+        prompt.GetWrappedView ().Width = 40;
+        prompt.GetWrappedView ().Text = "Default name";
 
-                                                                                            if (!string.IsNullOrEmpty (initialValueField.Text))
-                                                                                            {
-                                                                                                ((IValue)prompt.GetWrappedView ())
-                                                                                                    .TrySetValueFromString (initialValueField.Text);
-                                                                                            }
-                                                                                        });
+        if (!string.IsNullOrEmpty (initialValueField.Text))
+        {
+            ((IValue)prompt.GetWrappedView ())
+                .TrySetValueFromString (initialValueField.Text);
+        }
+    });
 
-                                 MessageBox.Query (app, textFieldButton.Title, result is { } ? $"You entered: {result}" : "Canceled", Strings.btnOk);
-                             };
+    MessageBox.Query (app, textFieldButton.Title, result is not null ? $"You entered: {result}" : "Canceled",
+        Strings.btnOk);
+};
 
 mainWindow.Add (textFieldButton);
 
@@ -75,24 +77,25 @@ mainWindow.Add (textFieldButton);
 Button editorButton = new () { Title = "Editor (Auto-Text)", X = Pos.Center (), Y = buttonY++ };
 
 editorButton.Accepting += (_, _) =>
-                          {
-                              string? result = mainWindow.Prompt<Editor, string> (beginInitHandler: prompt =>
-                                                                                                    {
-                                                                                                        prompt.Title = editorButton.Title;
+{
+    var result = mainWindow.Prompt<Editor, string> (beginInitHandler: prompt =>
+    {
+        prompt.Title = editorButton.Title;
 
-                                                                                                        prompt.GetWrappedView ().Text = "Some text\nis nice.";
-                                                                                                        prompt.GetWrappedView ().Width = Dim.Fill (0, 40);
-                                                                                                        prompt.GetWrappedView ().Height = Dim.Fill (0, 8);
+        prompt.GetWrappedView ().Text = "Some text\nis nice.";
+        prompt.GetWrappedView ().Width = Dim.Fill (0, 40);
+        prompt.GetWrappedView ().Height = Dim.Fill (0, 8);
 
-                                                                                                        if (!string.IsNullOrEmpty (initialValueField.Text))
-                                                                                                        {
-                                                                                                            ((IValue)prompt.GetWrappedView ())
-                                                                                                                .TrySetValueFromString (initialValueField.Text);
-                                                                                                        }
-                                                                                                    });
+        if (!string.IsNullOrEmpty (initialValueField.Text))
+        {
+            ((IValue)prompt.GetWrappedView ())
+                .TrySetValueFromString (initialValueField.Text);
+        }
+    });
 
-                              MessageBox.Query (app, editorButton.Title, result is { } ? $"You entered: {result}" : "Canceled", Strings.btnOk);
-                          };
+    MessageBox.Query (app, editorButton.Title, result is not null ? $"You entered: {result}" : "Canceled",
+        Strings.btnOk);
+};
 
 mainWindow.Add (editorButton);
 
@@ -100,29 +103,29 @@ mainWindow.Add (editorButton);
 Button datePickerButton = new () { Title = "DatePicker (Typed Result)", X = Pos.Center (), Y = buttonY++ };
 
 datePickerButton.Accepting += (_, _) =>
-                              {
-                                  DateTime? result = mainWindow.Prompt<DatePicker, DateTime> (resultExtractor: dp => dp.Value,
-                                                                                              beginInitHandler: prompt =>
-                                                                                              {
-                                                                                                  prompt.Title = "Select a Date";
-                                                                                                  prompt.GetWrappedView ().Value = DateTime.Now;
+{
+    DateTime? result = mainWindow.Prompt<DatePicker, DateTime> (resultExtractor: dp => dp.Value,
+        beginInitHandler: prompt =>
+        {
+            prompt.Title = "Select a Date";
+            prompt.GetWrappedView ().Value = DateTime.Now;
 
-                                                                                                  if (!string.IsNullOrEmpty (initialValueField.Text))
-                                                                                                  {
-                                                                                                      ((IValue)prompt.GetWrappedView ())
-                                                                                                          .TrySetValueFromString (initialValueField.Text);
-                                                                                                  }
-                                                                                              });
+            if (!string.IsNullOrEmpty (initialValueField.Text))
+            {
+                ((IValue)prompt.GetWrappedView ())
+                    .TrySetValueFromString (initialValueField.Text);
+            }
+        });
 
-                                  if (result is { } selectedDate)
-                                  {
-                                      MessageBox.Query (app, datePickerButton.Title, $"You selected: {selectedDate:yyyy-MM-dd}", Strings.btnOk);
-                                  }
-                                  else
-                                  {
-                                      MessageBox.Query (app, datePickerButton.Title, "Canceled", Strings.btnOk);
-                                  }
-                              };
+    if (result is { } selectedDate)
+    {
+        MessageBox.Query (app, datePickerButton.Title, $"You selected: {selectedDate:yyyy-MM-dd}", Strings.btnOk);
+    }
+    else
+    {
+        MessageBox.Query (app, datePickerButton.Title, "Canceled", Strings.btnOk);
+    }
+};
 
 mainWindow.Add (datePickerButton);
 
@@ -130,28 +133,28 @@ mainWindow.Add (datePickerButton);
 Button colorPickerButton = new () { Title = "ColorPicker (Typed Result)", X = Pos.Center (), Y = buttonY++ };
 
 colorPickerButton.Accepting += (_, _) =>
-                               {
-                                   Color? result = mainWindow.Prompt<ColorPicker, Color?> (input: null,
-                                                                                           beginInitHandler: prompt =>
-                                                                                           {
-                                                                                               prompt.Title = "Pick a Color";
+{
+    Color? result = mainWindow.Prompt<ColorPicker, Color?> (input: null,
+        beginInitHandler: prompt =>
+        {
+            prompt.Title = "Pick a Color";
 
-                                                                                               if (!string.IsNullOrEmpty (initialValueField.Text))
-                                                                                               {
-                                                                                                   ((IValue)prompt.GetWrappedView ())
-                                                                                                       .TrySetValueFromString (initialValueField.Text);
-                                                                                               }
-                                                                                           });
+            if (!string.IsNullOrEmpty (initialValueField.Text))
+            {
+                ((IValue)prompt.GetWrappedView ())
+                    .TrySetValueFromString (initialValueField.Text);
+            }
+        });
 
-                                   if (result is { } selectedColor)
-                                   {
-                                       MessageBox.Query (app, colorPickerButton.Title, $"You selected: {selectedColor}", Strings.btnOk);
-                                   }
-                                   else
-                                   {
-                                       MessageBox.Query (app, colorPickerButton.Title, "Canceled", Strings.btnOk);
-                                   }
-                               };
+    if (result is { } selectedColor)
+    {
+        MessageBox.Query (app, colorPickerButton.Title, $"You selected: {selectedColor}", Strings.btnOk);
+    }
+    else
+    {
+        MessageBox.Query (app, colorPickerButton.Title, "Canceled", Strings.btnOk);
+    }
+};
 
 mainWindow.Add (colorPickerButton);
 
@@ -159,21 +162,22 @@ mainWindow.Add (colorPickerButton);
 Button colorTextButton = new () { Title = "ColorPicker (Auto-Text)", X = Pos.Center (), Y = buttonY++ };
 
 colorTextButton.Accepting += (_, _) =>
-                             {
-                                 string? result = mainWindow.Prompt<ColorPicker, string> (beginInitHandler: prompt =>
-                                                                                          {
-                                                                                              prompt.Title = "Pick a Color (as text)";
-                                                                                              prompt.GetWrappedView ().SelectedColor = Color.Red;
+{
+    var result = mainWindow.Prompt<ColorPicker, string> (beginInitHandler: prompt =>
+    {
+        prompt.Title = "Pick a Color (as text)";
+        prompt.GetWrappedView ().SelectedColor = Color.Red;
 
-                                                                                              if (!string.IsNullOrEmpty (initialValueField.Text))
-                                                                                              {
-                                                                                                  ((IValue)prompt.GetWrappedView ())
-                                                                                                      .TrySetValueFromString (initialValueField.Text);
-                                                                                              }
-                                                                                          });
+        if (!string.IsNullOrEmpty (initialValueField.Text))
+        {
+            ((IValue)prompt.GetWrappedView ())
+                .TrySetValueFromString (initialValueField.Text);
+        }
+    });
 
-                                 MessageBox.Query (app, colorTextButton.Title, result is { } ? $"Color as text: {result}" : "Canceled", Strings.btnOk);
-                             };
+    MessageBox.Query (app, colorTextButton.Title, result is not null ? $"Color as text: {result}" : "Canceled",
+        Strings.btnOk);
+};
 
 mainWindow.Add (colorTextButton);
 
@@ -181,23 +185,23 @@ mainWindow.Add (colorTextButton);
 Button preCreatedButton = new () { Title = "Pre-Created TextField", X = Pos.Center (), Y = buttonY++ };
 
 preCreatedButton.Accepting += (_, _) =>
-                              {
-                                  // Pre-create and configure the view
-                                  TextField textField = new () { Width = 50, Text = "Pre-configured text" };
+{
+    // Pre-create and configure the view
+    TextField textField = new () { Width = 50, Text = "Pre-configured text" };
 
-                                  string? result = mainWindow.Prompt<TextField, string?> (textField,
-                                                                                          field => field.Text,
-                                                                                          beginInitHandler: prompt =>
-                                                                                          {
-                                                                                              prompt.Title = preCreatedButton.Title;
-                                                                                              prompt.BorderStyle = LineStyle.Rounded;
-                                                                                          });
+    var result = mainWindow.Prompt<TextField, string?> (textField,
+        field => field.Text,
+        beginInitHandler: prompt =>
+        {
+            prompt.Title = preCreatedButton.Title;
+            prompt.BorderStyle = LineStyle.Rounded;
+        });
 
-                                  if (result is { })
-                                  {
-                                      MessageBox.Query (app, preCreatedButton.Title, $"You entered: {result}", Strings.btnOk);
-                                  }
-                              };
+    if (result is not null)
+    {
+        MessageBox.Query (app, preCreatedButton.Title, $"You entered: {result}", Strings.btnOk);
+    }
+};
 
 mainWindow.Add (preCreatedButton);
 
@@ -205,25 +209,25 @@ mainWindow.Add (preCreatedButton);
 Button customFormButton = new () { Title = "Custom Form", X = Pos.Center (), Y = buttonY++ };
 
 customFormButton.Accepting += (_, _) =>
-                              {
-                                  View formView = CreateCustomForm ();
+{
+    View formView = CreateCustomForm ();
 
-                                  FormData? result = mainWindow.Prompt (formView,
-                                                                        ExtractFormData,
-                                                                        beginInitHandler: prompt => { prompt.Title = "User Information Form"; });
+    FormData? result = mainWindow.Prompt (formView,
+        ExtractFormData,
+        beginInitHandler: prompt => { prompt.Title = "User Information Form"; });
 
-                                  if (result is { })
-                                  {
-                                      MessageBox.Query (app,
-                                                        customFormButton.Title,
-                                                        $"Name: {result.Name}\nAge: {result.Age}\nAgreed: {result.Agreed}",
-                                                        Strings.btnOk);
-                                  }
-                                  else
-                                  {
-                                      MessageBox.Query (app, "Form canceled", Strings.btnOk);
-                                  }
-                              };
+    if (result is not null)
+    {
+        MessageBox.Query (app,
+            customFormButton.Title,
+            $"Name: {result.Name}\nAge: {result.Age}\nAgreed: {result.Agreed}",
+            Strings.btnOk);
+    }
+    else
+    {
+        MessageBox.Query (app, "Form canceled", Strings.btnOk);
+    }
+};
 
 mainWindow.Add (customFormButton);
 
@@ -231,31 +235,31 @@ mainWindow.Add (customFormButton);
 Button flagSelectorButton = new () { Title = "FlagSelector (Enum Result)", X = Pos.Center (), Y = buttonY++ };
 
 flagSelectorButton.Accepting += (_, _) =>
-                                {
-                                    SelectorStyles? result =
-                                        mainWindow.Prompt<FlagSelector<SelectorStyles>, SelectorStyles> (resultExtractor: fs => fs.Value!.Value,
-                                                                                                         beginInitHandler: prompt =>
-                                                                                                         {
-                                                                                                             prompt.Title = "Choose Selector Styles";
+{
+    SelectorStyles? result =
+        mainWindow.Prompt<FlagSelector<SelectorStyles>, SelectorStyles> (resultExtractor: fs => fs.Value!.Value,
+            beginInitHandler: prompt =>
+            {
+                prompt.Title = "Choose Selector Styles";
 
-                                                                                                             if (!string.IsNullOrEmpty (initialValueField
-                                                                                                                 .Text))
-                                                                                                             {
-                                                                                                                 ((IValue)prompt.GetWrappedView ())
-                                                                                                                     .TrySetValueFromString (initialValueField
-                                                                                                                         .Text);
-                                                                                                             }
-                                                                                                         });
+                if (!string.IsNullOrEmpty (initialValueField
+                        .Text))
+                {
+                    ((IValue)prompt.GetWrappedView ())
+                        .TrySetValueFromString (initialValueField
+                            .Text);
+                }
+            });
 
-                                    if (result is { } styles)
-                                    {
-                                        MessageBox.Query (app, flagSelectorButton.Title, $"Selected styles: {styles}", Strings.btnOk);
-                                    }
-                                    else
-                                    {
-                                        MessageBox.Query (app, flagSelectorButton.Title, "Canceled", Strings.btnOk);
-                                    }
-                                };
+    if (result is { } styles)
+    {
+        MessageBox.Query (app, flagSelectorButton.Title, $"Selected styles: {styles}", Strings.btnOk);
+    }
+    else
+    {
+        MessageBox.Query (app, flagSelectorButton.Title, "Canceled", Strings.btnOk);
+    }
+};
 
 mainWindow.Add (flagSelectorButton);
 
@@ -292,14 +296,14 @@ View CreateCustomForm ()
 // Helper method to extract data from the custom form
 FormData ExtractFormData (View form)
 {
-    var nameField = form.SubViews.FirstOrDefault (v => v.Id == "nameField") as TextField;
-    var ageField = form.SubViews.FirstOrDefault (v => v.Id == "ageField") as TextField;
-    var agreeCheckbox = form.SubViews.FirstOrDefault (v => v.Id == "agreeCheckbox") as CheckBox;
+    TextField? nameField = form.SubViews.FirstOrDefault (v => v.Id == "nameField") as TextField;
+    TextField? ageField = form.SubViews.FirstOrDefault (v => v.Id == "ageField") as TextField;
+    CheckBox? agreeCheckbox = form.SubViews.FirstOrDefault (v => v.Id == "agreeCheckbox") as CheckBox;
 
     return new FormData
     {
         Name = nameField?.Text ?? string.Empty,
-        Age = int.TryParse (ageField?.Text, out int age) ? age : 0,
+        Age = int.TryParse (ageField?.Text, out var age) ? age : 0,
         Agreed = agreeCheckbox?.Value == CheckState.Checked
     };
 }
