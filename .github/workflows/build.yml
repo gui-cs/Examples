@@ -10,7 +10,7 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  build-and-test:
     strategy:
       fail-fast: false
       matrix:
@@ -27,17 +27,37 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '10.0.x'
-          dotnet-quality: 'ga'
+          dotnet-quality: 'preview'
 
       - name: Restore
         run: dotnet restore Examples.sln
 
+      - name: Restore dotnet tools
+        run: dotnet tool restore
+
       - name: Build
         run: dotnet build Examples.sln --no-restore
 
-      - name: Verify code style
+      # Style gate runs once (Linux). dotnet format catches whitespace/analyzer drift;
+      # jb cleanupcode catches what dotnet format misses (space before new(), var usage,
+      # expression-bodied members, using sorting).
+      - name: Verify code style — dotnet format
         if: matrix.os == 'ubuntu-latest'
-        run: dotnet format Examples.sln --exclude tests/ --verify-no-changes
+        run: |
+          dotnet format Examples.sln --no-restore --verify-no-changes \
+            --exclude tests/
+
+      - name: Verify code style — ReSharper cleanupcode
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          dotnet jb cleanupcode Examples.sln \
+            --profile="Built-in: Full Cleanup" \
+            --no-build \
+            || true
+          if ! git diff --exit-code; then
+            echo "::error::ReSharper code cleanup found style drift. Run 'dotnet jb cleanupcode Examples.sln --profile=\"Built-in: Full Cleanup\" --no-build' locally and commit the result."
+            exit 1
+          fi
 
       - name: Smoke Tests
         run: dotnet test tests/Examples.SmokeTests
