@@ -1,0 +1,7 @@
+<Project>
+  <!-- When TerminalGuiRoot is set, replace the Terminal.Gui NuGet PackageReference with a ProjectReference -->
+  <ItemGroup Condition="'$(UseLocalTerminalGui)' == 'true'">
+    <PackageReference Remove="Terminal.Gui" />
+    <ProjectReference Include="$(TerminalGuiRoot)\Terminal.Gui\Terminal.Gui.csproj" />
+  </ItemGroup>
+</Project>

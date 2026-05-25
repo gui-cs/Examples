@@ -24,6 +24,17 @@ cd Example
 dotnet run
 ```
 
+### Building Against Local Terminal.Gui Source
+
+To build the examples against a local clone of Terminal.Gui (instead of the NuGet package), pass the `TerminalGuiRoot` property pointing to your Terminal.Gui repository root:
+
+```bash
+dotnet build -p:TerminalGuiRoot=../Terminal.Gui
+dotnet run --project Example -p:TerminalGuiRoot=../Terminal.Gui
+```
+
+This replaces the NuGet `PackageReference` with a `ProjectReference`, so any breaking changes in Terminal.Gui are caught immediately during development.
+
 ## Examples
 
 | Project | Description |
@@ -60,7 +71,7 @@ dotnet run
 ## Contributing
 
 1. Follow Terminal.Gui [coding conventions](https://github.com/gui-cs/Terminal.Gui/blob/develop/CONTRIBUTING.md)
-2. Examples should reference Terminal.Gui via NuGet package (not ProjectReference)
+2. Examples reference Terminal.Gui via NuGet by default; use `TerminalGuiRoot` for local development
 3. Each example should have its own project directory with a descriptive name
 4. Include a README.md in each example explaining what it demonstrates
 

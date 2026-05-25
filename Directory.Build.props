@@ -7,4 +7,13 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
   </PropertyGroup>
+
+  <!-- Optional: reference Terminal.Gui source instead of the NuGet package.
+       Set TerminalGuiRoot to the path of your local Terminal.Gui repo clone.
+       Example: dotnet build -p:TerminalGuiRoot=../Terminal.Gui -->
+  <PropertyGroup Condition="'$(TerminalGuiRoot)' != ''">
+    <UseLocalTerminalGui>true</UseLocalTerminalGui>
+    <!-- Resolve relative paths against the repo root (where this file lives), not each .csproj -->
+    <TerminalGuiRoot>$([MSBuild]::NormalizePath('$(MSBuildThisFileDirectory)', '$(TerminalGuiRoot)'))</TerminalGuiRoot>
+  </PropertyGroup>
 </Project>
